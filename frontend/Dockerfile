@@ -1,5 +1,5 @@
 # Imagem oficial do Node.js
-FROM node:20-alpine
+FROM node:18-bullseye
 
 # Definir o diretório de trabalho
 WORKDIR /app
@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Comando para iniciar o servidor de produção
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]

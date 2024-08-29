@@ -1,47 +1,43 @@
-# Dockerfile backend
-
-# Imagem oficial do PHP com Apache
+# Use uma imagem base do PHP com Apache
 FROM php:8.2-apache
 
-# Instalando dependências do sistema
+# Instale extensões do PHP e dependências do sistema necessárias
 RUN apt-get update && apt-get install -y \
-    build-essential \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     libzip-dev \
     zip \
     unzip \
-    git \
-    curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip
+    && docker-php-ext-install pdo pdo_mysql gd zip
 
-# Habilitar mod_rewrite para Laravel
+# Instale o Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Configure o DocumentRoot do Apache para o diretório 'public' do Laravel
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+
+# Altere o DocumentRoot no arquivo de configuração padrão do Apache
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+
+# Ative o mod_rewrite do Apache (necessário para Laravel)
 RUN a2enmod rewrite
 
-# Instalar Composer
-COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
-
-# Configurar o diretório de trabalho
+# Defina o diretório de trabalho
 WORKDIR /var/www/html
 
-# Copiar o conteúdo do projeto para o container
-COPY . .
+# Copie o código da aplicação Laravel para o diretório de trabalho
+COPY . /var/www/html
 
-# Instalar dependências do Laravel
-RUN composer install --no-scripts --no-autoloader
+# Verifique o conteúdo da pasta para garantir que os arquivos foram copiados
+RUN ls -la /var/www/html
 
-# Gerar chave do aplicativo Laravel
-RUN php artisan key:generate
+# Instale as dependências do Laravel
+RUN composer install
 
-# Definir permissões corretas
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Expor a porta do Apache
+# Exponha a porta 80
 EXPOSE 80
 
-# Comando para iniciar o servidor
+# Inicie o Apache no primeiro plano
 CMD ["apache2-foreground"]
