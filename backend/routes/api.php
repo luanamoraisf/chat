@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Passport\Passport;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::post('/oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
+Route::post('/oauth/token/refresh', '\Laravel\Passport\Http\Controllers\TransientTokenController@refresh');
+Route::get('/oauth/authorize', '\Laravel\Passport\Http\Controllers\AuthorizationController@authorize');
+Route::delete('/oauth/token/revoke', '\Laravel\Passport\Http\Controllers\AuthorizedAccessTokenController@destroy');
+
+
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
