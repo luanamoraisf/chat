@@ -1,21 +1,24 @@
-import { useSession, signOut } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import { getSession } from "next-auth/react";
 
-export default function Dashboard() {
-  const router = useRouter();
-  const { data: session } = useSession();
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
 
   if (!session) {
-    return <p>Loading...</p>;
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
   }
 
-  return (
-    <div>
-      <h2>Dashboard</h2>
-      <p>Welcome, {session.user.name}</p>
-      <button onClick={() => signOut()}>Logout</button>
-    </div>
-  );
-  
+  return {
+    props: { session },
+  };
 }
 
+const Dashboard = ({ session }) => {
+  return <div>Bem-vindo, {session.user.name}!</div>;
+};
+
+export default Dashboard;
