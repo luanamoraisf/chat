@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from 'next-auth/react';
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -6,7 +6,7 @@ export async function getServerSideProps(context) {
   if (!session) {
     return {
       redirect: {
-        destination: "/login",
+        destination: '/login',
         permanent: false,
       },
     };
@@ -18,7 +18,16 @@ export async function getServerSideProps(context) {
 }
 
 const Dashboard = ({ session }) => {
-  return <div>Bem-vindo, {session.user.name}!</div>;
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: '/' });
+  };
+
+  return (
+    <div>
+      <h1>Bem-vindo, {session.user.name}!</h1>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
 };
 
 export default Dashboard;
