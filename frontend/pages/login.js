@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import ErrorBoundary from '../components/ErrorBoundary';
 
 function Login() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
@@ -13,7 +13,7 @@ function Login() {
     setMounted(true);
   }, []);
 
-  useEffect(() =>{
+  useEffect(() => {
     if (mounted && status === 'authenticated') {
       router.push('/dashboard');
     }
@@ -23,7 +23,7 @@ function Login() {
     return <p>Loading...</p>;
   }
 
-  if (status === 'authenticated' && !session) {
+  if (status === 'authenticated') {
     // Se status for "authenticated" mas session for indefinido, isso é um erro.
     return <p>Session data is missing!</p>;
   }
@@ -31,10 +31,13 @@ function Login() {
   return (
     <div>
       <h2>Login</h2>
-      <button onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>Login with Google</button>
+      <button onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>
+        Login with Google
+      </button>
     </div>
   );
 }
+
 const LoginWithErrorBoundary = dynamic(
   () => Promise.resolve((props) => (
     <ErrorBoundary>
