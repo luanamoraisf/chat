@@ -29,9 +29,9 @@ function Login() {
   }
 
   return (
-    <div>
-      <h2>Login</h2>
-      <button onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>
+    <div className="text-center">
+      <h2 className='text-4xl font-serif mb-11 mt-11'>Login</h2>
+      <button className='bg-violet-300 border-8 border-violet-300 rounded hover:bg-violet-400 hover:border-violet-400' onClick={() => signIn('google', { callbackUrl: '/dashboard' })}>
         Login with Google
       </button>
     </div>
