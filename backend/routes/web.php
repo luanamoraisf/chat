@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,5 @@ Route::get('auth/google', function () {
 Route::get('auth/google/callback', function () {
     $user = Socialite::driver('google')->user();
 });
+
+Route::resource('user', UserController::class)->only([ 'store', 'index', 'update', 'destroy' ]);
