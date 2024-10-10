@@ -12,7 +12,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $user = User::orderBy('created_at', 'desc')->paginate(10);
+
+        return response()->json($user);
     }
 
     /**
@@ -65,7 +67,13 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::findOrFail($id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => $request->passaword
+        ]); 
+
+        return response()->json(['message' => 'Usuário atulizado!'], $user);
     }
 
     /**
@@ -73,6 +81,7 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id)->delete();
+        return response()->json(['message' => 'Usuário deletado!'], 200);
     }
 }
