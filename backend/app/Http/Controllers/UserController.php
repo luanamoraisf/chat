@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -39,11 +40,19 @@ class UserController extends Controller
 
         $user->name = $validateData['name'];
         $user->email = $request->email;
-        $user->password = $validateData['password'];
+        $user->password = bcrypt($validateData['password']);
 
         $user->save();
 
-        return response()->json(['message' => 'Usuário Cadastrado com sucesso!'], 200);
+        if($request->expectsJson()){
+            return response()->json(['message' => 'Usuário Cadastrado com sucesso!'], 200);
+        }
+        else if($request->isMethod('post') && !$request->ajax()) {
+            return redirect()->route(users.index)->with('success', 'Usuário Cadastrado com sucesso!');
+        }
+        else {
+            abort(400, 'Tipo de requisição não suportada.');
+        }
     }
 
     /**
