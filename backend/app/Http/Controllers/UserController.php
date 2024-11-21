@@ -11,11 +11,17 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = User::orderBy('created_at', 'desc')->paginate(10);
 
-        return response()->json($user);
+        if($request->expectsJson()){   
+            return response()->json($user);
+        } 
+        else if($request->isMethod('get') && !$request->ajax()){
+            return view('');
+        }
+        
     }
 
     /**

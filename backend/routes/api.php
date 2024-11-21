@@ -30,3 +30,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/auth/token', [AuthController::class, 'createAccessToken']);
 
 Route::post('/create/user', [UserController::class, 'store']);
+
+Route::get('/index/user', [UserController::class, 'index']);
