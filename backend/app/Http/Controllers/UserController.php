@@ -88,7 +88,12 @@ class UserController extends Controller
             'password' => $request->passaword
         ]); 
 
-        return response()->json(['message' => 'Usuário atulizado!'], $user);
+        if($request->expextsJson()){
+            return response()->json(['message' => 'Usuário atulizado!'], $user);
+        }
+        else if(!$request->ajax()){
+            return Redirect::route('user.edit', ['user' => $user]);
+        }
     }
 
     /**

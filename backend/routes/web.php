@@ -27,3 +27,5 @@ Route::get('auth/google/callback', function () {
 });
 
 Route::resource('user', UserController::class)->only([ 'store', 'index', 'update', 'destroy' ]);
+
+Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
