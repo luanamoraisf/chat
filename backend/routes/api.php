@@ -32,3 +32,9 @@ Route::post('/auth/token', [AuthController::class, 'createAccessToken']);
 Route::post('/create/user', [UserController::class, 'store']);
 
 Route::get('/index/user', [UserController::class, 'index']);
+
+Route::put('/update/{id}', [UserController::class, 'update']);
+
+Route::delete('/destroy/{id}', [UserController::class, 'destroy']);
+
+Route::get('/find/{id}', [UserController::class, 'show']);

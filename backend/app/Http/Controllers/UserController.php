@@ -25,14 +25,6 @@ class UserController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -66,7 +58,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return response()->json($user->only(['name', 'email']));
     }
 
     /**
@@ -82,18 +75,17 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = User::findOrFail($id)->update([
+        $user = User::findOrFail($id);
+        $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->passaword
+            'password' => $request->password
         ]); 
 
-        if($request->expextsJson()){
-            return response()->json(['message' => 'Usuário atulizado!'], $user);
+        if($request->expectsJson()){
+            return response()->json(['message' => 'Usuário atulizado!'], 200);
         }
-        else if(!$request->ajax()){
-            return Redirect::route('user.edit', ['user' => $user]);
-        }
+        return Redirect::route('user.edit', ['user' => $user]);
     }
 
     /**
