@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,5 @@ Route::get('auth/google/callback', function () {
 Route::resource('user', UserController::class)->only([ 'store', 'index', 'update', 'destroy' ]);
 
 Route::get('/user/{user}/edit', [UserController::class, 'edit'])->name('user.edit');
+
+Route::get('test-broadcast/', [MessageController::class, 'testBroadcast']);
