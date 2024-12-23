@@ -2,12 +2,14 @@ import { useEffect } from "react";
 import { initializeEcho } from "../utils/echo";
 
 const NewMessage = () => {
+  const [messages, setMessages] = useState([]);
   useEffect(() => {
     const echo = initializeEcho();
 
     echo.channel("messages")
-      .listen("NewMessageEvent", (data) => {
-        console.log("Nova notificação recebida:", data);
+      .listen("NewMessage", (data) => {
+        console.log("Nova mensagem recebida:", data);
+        setMessages((prevMessages)=> [...prevMessages, data]);
       });
 
     return () => {
@@ -15,7 +17,16 @@ const NewMessage = () => {
     };
   }, []);
 
-  return <div>Ouça notificações em tempo real aqui!</div>;
+  return (
+    <div>
+      <h1>Mensagens em tempo real:</h1>
+      <ul>
+        {messages.map((msg, index) => (
+          <li key={index}>{JSON.stringify(msg)}</li>
+        ))}
+      </ul>
+    </div>
+  );
 };
 
 export default NewMessage;
